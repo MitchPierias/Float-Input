@@ -1,7 +1,7 @@
 # Float Form Input
 _Made specifically for React_
 
-<iframe src='https://gfycat.com/ifr/TinySatisfiedFlyingsquirrel' frameborder='0' scrolling='no' width='430' height='184' allowfullscreen></iframe>
+<img src="https://gfycat.com/ifr/TinySatisfiedFlyingsquirrel" width="430" height="184" alt="demo-1.0.0"/>
 
 Creates a form input element with dynamic floating label element.
 
