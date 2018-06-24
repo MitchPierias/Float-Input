@@ -1,6 +1,8 @@
 # Float Form Input
-> Made specifically for React
-A form input with dynamic floating label.
+_Made specifically for React_
+<iframe src='https://gfycat.com/ifr/TinySatisfiedFlyingsquirrel' frameborder='0' scrolling='no' width='430' height='184' allowfullscreen></iframe>
+
+Creates a form input element with dynamic floating label element.
 
 Simply import the FloatInput script into your React Component script.
 
@@ -11,12 +13,11 @@ import FloatInput from './FloatInput.js';
 Define a new `FormInput` element within your render's return output;
 ```
 render() {
-	
-	return (
-		... Open component layout
-			<FloatInput name="test" placeholder="What is your test?"/>
-		... Close component layout
-	)
+  return (
+    ... Open component layout
+      <FloatInput name="test" placeholder="What is your test?"/>
+    ... Close component layout
+  )
 }
 ```
 
