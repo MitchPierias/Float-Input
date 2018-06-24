@@ -1,6 +1,7 @@
 import React from 'react';
-import { string } from 'prop-types';
-
+import { string, number, func } from 'prop-types';
+// CSS
+import './FloatInput.css';
 /**
  * Form input with dynamic floating label.
  *
@@ -20,7 +21,15 @@ export default class FloatInput extends React.Component {
 		/** Label's color in a floating position. */
 		primaryColor:string,
 		/** Label's color in a placeholder position. */
-		secondayColor:string
+		secondayColor:string,
+		/** Input font size. */
+		fontSize:number,
+		/** Input top padding. */
+		paddingTop:number,
+		/** Input bottom padding. */
+		paddingBottom:number,
+		/** Value change event handler. */
+		onChange:func
 	}
 
 	static defaultProps = {
@@ -28,7 +37,10 @@ export default class FloatInput extends React.Component {
 		value:"",
 		placeholder:"",
 		primaryColor:"#F1773B",
-		secondayColor:"rgba(0,0,0,0.25)"
+		secondayColor:"rgba(0,0,0,0.25)",
+		fontSize:1,
+		paddingTop:0.9093749999999999,
+		paddingBottom:0.60625
 	}
 
 	componentWillMount() {
@@ -47,13 +59,13 @@ export default class FloatInput extends React.Component {
 		if (event.target.tagName.toLowerCase()=='label') {
 			let inputElem = event.target.parentNode.children[1];
 			inputElem.focus();
-			inputElem.select();
 			return;
 		}
 		// Update the label view layout
 		let labelElem = event.target.parentNode.children[0];
 		labelElem.style["color"] = this.props.primaryColor;
 		labelElem.style["top"] = "0.60625em";
+		labelElem.style["left"] = 0;
 		labelElem.style["font-size"] = "0.8125em";
 		labelElem.style["cursor"] = "default";
 	}
@@ -68,18 +80,20 @@ export default class FloatInput extends React.Component {
 	didDeselectInput(event) {
 		// Extract label element
 		let labelElem = event.target.parentNode.children[0];
+		const { fontSize, paddingTop, paddingBottom } = this.props;
 		// Update view if required
 		if (event.target.value.length == 0) {
 			labelElem.style["color"] = this.props.secondayColor;
-			labelElem.style["top"] = "1.8125em";
+			labelElem.style["top"] = ((fontSize/2)+paddingTop+paddingBottom)+"em";
+			labelElem.style["left"] = "2%";
 			labelElem.style["font-size"] = "1em";
 			labelElem.style["cursor"] = "text";
 		}
 		// Update values if required
 		let { name, value } = event.target;
-		if (value == "" || value == this.props.value) return;
+		if (value == "" || value == this.props.value || 'function' !== typeof this.props.onChange) return;
 		// Notify value change
-		console.log("Input value changed! Should notify the parent controller");
+		this.props.onChange(name, value);
 	}
 
 	/**
@@ -96,35 +110,40 @@ export default class FloatInput extends React.Component {
 	
 	render() {
 		// Local variables
-		const { name, placeholder } = this.props;
+		const { name, placeholder, fontSize, paddingTop, paddingBottom } = this.props;
 		const { value } = this.state;
 		const hasValue = (value != "" && value.length > 0);
 		// Initial <input/> style
-		let inputStyle = {
+		const inputStyle = {
 			display: "block",
-			width: "98%", 
+			width: "96%", 
 		    height: "100%",
-			padding: "0.60625em 1%",
-			fontSize: "1em",
+			padding: paddingTop+"em 2% "+paddingBottom+"em 2%",
+			fontSize: fontSize+"em",
 		    borderRadius: "none",
 		    outline: "none",
 		    border:"none",
 		    borderBottom: "2px solid #EEEEEE"
 		}
 		// Initial <label/> style
-		let labelStyle = {
-			fontSize: (hasValue) ? "0.8125em" : "1em",
-			lineHeight: "1em",
+		const labelStyle = {
+			fontSize: (hasValue) ? "0.8125em" : fontSize+"em",
+			lineHeight: fontSize+"em",
 			position: "relative",
-			top: (hasValue) ? "0.60625em" : "1.8125em",
-			left: "-1%",
+			top: (hasValue) ? "0.60625em" : ((fontSize/2)+paddingTop+paddingBottom)+"em",
+			left: (hasValue) ? 0 : "2%",
 			color: (hasValue) ? this.props.primaryColor : this.props.secondayColor,
 			display: "inline-block",
-			padding: "0 0.8125em 0 0.40625em",
+			padding: 0,
 			margin: "0px",
 			opacity: 1,
 			backgroundColor: "transparent",
-			cursor: (hasValue) ? "default" : "text",
+			cursor: (hasValue) ? "default" : "text"
+		}
+		// Initial <textbox/> style
+		const textboxStyle = {
+			height: "16em",
+			resize: "none"
 		}
 
 		return (
