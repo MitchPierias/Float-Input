@@ -1,7 +1,7 @@
 # Flow Input
 _Made specifically for React_
 
-<img src="https://thumbs.gfycat.com/KaleidoscopicQuarrelsomeIberianemeraldlizard-size_restricted.gif" width="430" height="184" alt="demo-1.0.0"/>
+<img src="https://thumbs.gfycat.com/KaleidoscopicQuarrelsomeIberianemeraldlizard-size_restricted.gif" alt="demo-1.0.0"/>
 
 Creates a form input element with dynamic floating label element.
 
