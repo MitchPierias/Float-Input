@@ -1,7 +1,7 @@
 import React from 'react';
 import { string, number, func } from 'prop-types';
 // CSS
-import './FloatInput.css';
+import './FlowInput.css';
 /**
  * Form input with dynamic floating label.
  *
@@ -9,7 +9,7 @@ import './FloatInput.css';
  * @version 1.0.0
  * @author [Mitch Pierias](https://github.com/mitchpierias)
  */
-export default class FloatInput extends React.Component {
+export default class FlowInput extends React.Component {
 
 	static propTypes = {
 		/** The input 'name' value. */
@@ -18,16 +18,18 @@ export default class FloatInput extends React.Component {
 		value:string,
 		/** Input's placeholder and labels text. */
 		placeholder:string,
-		/** Label's color in a floating position. */
+		/** Input text color. */
+		color:string,
+		/** Label text color in a floating position. */
 		primaryColor:string,
-		/** Label's color in a placeholder position. */
+		/** Label text color in a placeholder position. */
 		secondayColor:string,
 		/** Input font size. */
 		fontSize:number,
-		/** Input top padding. */
-		paddingTop:number,
-		/** Input bottom padding. */
-		paddingBottom:number,
+		/** Label shrink amount. */
+		shrinkAmount:number,
+		/** Input padding. */
+		padding:number,
 		/** Value change event handler. */
 		onChange:func
 	}
@@ -36,11 +38,12 @@ export default class FloatInput extends React.Component {
 		name:"",
 		value:"",
 		placeholder:"",
+		color:"#424242",
 		primaryColor:"#F1773B",
 		secondayColor:"rgba(0,0,0,0.25)",
 		fontSize:1,
-		paddingTop:0.9093749999999999,
-		paddingBottom:0.60625
+		shrinkAmount:0.8,
+		padding:0.6160335
 	}
 
 	componentWillMount() {
@@ -61,12 +64,13 @@ export default class FloatInput extends React.Component {
 			inputElem.focus();
 			return;
 		}
+		let labelFontSize = (this.props.fontSize*this.props.shrinkAmount);
 		// Update the label view layout
 		let labelElem = event.target.parentNode.children[0];
 		labelElem.style["color"] = this.props.primaryColor;
 		labelElem.style["top"] = "0.60625em";
 		labelElem.style["left"] = 0;
-		labelElem.style["font-size"] = "0.8125em";
+		labelElem.style["font-size"] = labelFontSize+"em";
 		labelElem.style["cursor"] = "default";
 	}
 
@@ -80,13 +84,15 @@ export default class FloatInput extends React.Component {
 	didDeselectInput(event) {
 		// Extract label element
 		let labelElem = event.target.parentNode.children[0];
-		const { fontSize, paddingTop, paddingBottom } = this.props;
+		const { fontSize, padding } = this.props;
+		const paddingTop = padding+((fontSize*this.props.shrinkAmount)/4);
+		const paddingBottom = padding;
 		// Update view if required
 		if (event.target.value.length == 0) {
 			labelElem.style["color"] = this.props.secondayColor;
 			labelElem.style["top"] = ((fontSize/2)+paddingTop+paddingBottom)+"em";
 			labelElem.style["left"] = "2%";
-			labelElem.style["font-size"] = "1em";
+			labelElem.style["font-size"] = fontSize+"em";
 			labelElem.style["cursor"] = "text";
 		}
 		// Update values if required
@@ -110,11 +116,14 @@ export default class FloatInput extends React.Component {
 	
 	render() {
 		// Local variables
-		const { name, placeholder, fontSize, paddingTop, paddingBottom } = this.props;
+		const { name, placeholder, fontSize, color, primaryColor, secondayColor, padding } = this.props;
+		const paddingTop = padding+((this.props.fontSize*this.props.shrinkAmount)/4);
+		const paddingBottom = padding;
 		const { value } = this.state;
 		const hasValue = (value != "" && value.length > 0);
 		// Initial <input/> style
 		const inputStyle = {
+			color:color,
 			display: "block",
 			width: "96%", 
 		    height: "100%",
@@ -127,12 +136,12 @@ export default class FloatInput extends React.Component {
 		}
 		// Initial <label/> style
 		const labelStyle = {
-			fontSize: (hasValue) ? "0.8125em" : fontSize+"em",
+			fontSize: (hasValue) ? (fontSize*this.props.shrinkAmount)+"em" : fontSize+"em",
 			lineHeight: fontSize+"em",
 			position: "relative",
 			top: (hasValue) ? "0.60625em" : ((fontSize/2)+paddingTop+paddingBottom)+"em",
 			left: (hasValue) ? 0 : "2%",
-			color: (hasValue) ? this.props.primaryColor : this.props.secondayColor,
+			color: (hasValue) ? primaryColor : secondayColor,
 			display: "inline-block",
 			padding: 0,
 			margin: "0px",
