@@ -1,7 +1,5 @@
 import React from 'react';
-import { string, number, func } from 'prop-types';
-// CSS
-import './FlowInput.css';
+import { string, number, func, bool } from 'prop-types';
 /**
  * Form input with dynamic floating label.
  *
@@ -18,6 +16,8 @@ export default class FlowInput extends React.Component {
 		value:string,
 		/** Input's placeholder and labels text. */
 		placeholder:string,
+		/** Input type, defaults to text. */
+		type:string,
 		/** Input text color. */
 		color:string,
 		/** Label text color in a floating position. */
@@ -31,23 +31,42 @@ export default class FlowInput extends React.Component {
 		/** Input padding. */
 		padding:number,
 		/** Value change event handler. */
-		onChange:func
+		onChange:func,
+		/** Editing end event handler. */
+		onComplete:func,
+		/** Debug toggle. */
+		debug:bool
 	}
 
 	static defaultProps = {
 		name:"",
 		value:"",
 		placeholder:"",
+		type:"text",
 		color:"#424242",
 		primaryColor:"#F1773B",
 		secondayColor:"rgba(0,0,0,0.25)",
-		fontSize:1,
-		shrinkAmount:0.8,
-		padding:0.6160335
+		fontSize:16,
+		shrinkAmount:0.6,
+		padding:0.6160335,
+		bordered:true,
+		debug:false
+	}
+
+	state = {
+		value:"",
+		selected:false
 	}
 
 	componentWillMount() {
-		this.setState({ value:this.props.value });
+		const value = this.props.value;
+		const selected = this.isSelected();
+		this.setState({ value, selected });
+	}
+
+	isSelected() {
+		const { value } = this.props;
+		return (value != 0 && value.length > 0);
 	}
 
 	/**
@@ -60,18 +79,12 @@ export default class FlowInput extends React.Component {
 	didSelectInput(event) {
 		// Check selected element type
 		if (event.target.tagName.toLowerCase()=='label') {
-			let inputElem = event.target.parentNode.children[1];
+			let inputElem = event.target.parentNode.children[0];
 			inputElem.focus();
 			return;
 		}
-		let labelFontSize = (this.props.fontSize*this.props.shrinkAmount);
-		// Update the label view layout
-		let labelElem = event.target.parentNode.children[0];
-		labelElem.style["color"] = this.props.primaryColor;
-		labelElem.style["top"] = "0.60625em";
-		labelElem.style["left"] = 0;
-		labelElem.style["font-size"] = labelFontSize+"em";
-		labelElem.style["cursor"] = "default";
+
+		this.setState({ selected:true });
 	}
 
 	/**
@@ -82,24 +95,15 @@ export default class FlowInput extends React.Component {
 	 * @private
 	 */
 	didDeselectInput(event) {
-		// Extract label element
-		let labelElem = event.target.parentNode.children[0];
-		const { fontSize, padding } = this.props;
-		const paddingTop = padding+((fontSize*this.props.shrinkAmount)/4);
-		const paddingBottom = padding;
-		// Update view if required
-		if (event.target.value.length == 0) {
-			labelElem.style["color"] = this.props.secondayColor;
-			labelElem.style["top"] = ((fontSize/2)+paddingTop+paddingBottom)+"em";
-			labelElem.style["left"] = "2%";
-			labelElem.style["font-size"] = fontSize+"em";
-			labelElem.style["cursor"] = "text";
-		}
 		// Update values if required
 		let { name, value } = event.target;
-		if (value == "" || value == this.props.value || 'function' !== typeof this.props.onChange) return;
-		// Notify value change
-		this.props.onChange(name, value);
+		if (value == "" || value == this.props.value || 'function' !== typeof this.props.onComplete) {
+			// Return to initial state
+			this.setState({ selected:(value && value.length > 0) });
+		} else {
+			// Input value has changed
+			this.props.onComplete(name, value);
+		}
 	}
 
 	/**
@@ -110,55 +114,73 @@ export default class FlowInput extends React.Component {
 	 * @private
 	 */
 	didChangeInput(event) {
-		let input = event.target.value;
-		this.setState({value:input});
+		let { name, value } = event.target;
+		// Validate value change and notify
+		if (value != "" && value != this.props.value && 'function' === typeof this.props.onChange) {
+			this.setState({ value });
+			this.props.onChange(name, value);
+		}
 	}
 	
 	render() {
-		// Local variables
-		const { name, placeholder, fontSize, color, primaryColor, secondayColor, padding } = this.props;
-		const paddingTop = padding+((this.props.fontSize*this.props.shrinkAmount)/4);
-		const paddingBottom = padding;
-		const { value } = this.state;
-		const hasValue = (value != "" && value.length > 0);
+		// Data variables
+		const { name, placeholder, type } = this.props;
+		// Config variables
+		const { fontSize, color, primaryColor, secondayColor, debug, bordered } = this.props;
+		const labelFontSize = fontSize * this.props.shrinkAmount;
+		// State variables
+		const { value, selected } = this.state;
+		// Container <div/> style
+		const containerStyle = {
+			height:(fontSize+(labelFontSize*3)-(Number(bordered)*2))+"px",
+			borderBottom:((bordered)?"2px solid #EEEEEE":"none"),
+			backgroundColor:(debug)?"#FF1744":"transparent",
+			//overflow:"hidden",
+			marginBottom:"7px"
+		}
 		// Initial <input/> style
 		const inputStyle = {
-			color:color,
-			display: "block",
-			width: "96%", 
-		    height: "100%",
-			padding: paddingTop+"em 2% "+paddingBottom+"em 2%",
-			fontSize: fontSize+"em",
+			color:(debug)?"#FFFFFF":color,
+			width: "96%",
+			padding: "0px 2%",
+			margin: 0,
+			fontSize: fontSize+"px",
+			lineHeight: fontSize+labelFontSize+"px",
 		    borderRadius: "none",
 		    outline: "none",
 		    border:"none",
-		    borderBottom: "2px solid #EEEEEE"
+		    top: (labelFontSize)+"px",
+		    position: "relative",
+		    borderBottom: "none",
+		    border:"none",
+		    backgroundColor:(debug)?"#424242":"transparent"
 		}
 		// Initial <label/> style
 		const labelStyle = {
-			fontSize: (hasValue) ? (fontSize*this.props.shrinkAmount)+"em" : fontSize+"em",
-			lineHeight: fontSize+"em",
+			fontSize: ((selected) ? labelFontSize : fontSize)+"px",
 			position: "relative",
-			top: (hasValue) ? "0.60625em" : ((fontSize/2)+paddingTop+paddingBottom)+"em",
-			left: (hasValue) ? 0 : "2%",
-			color: (hasValue) ? primaryColor : secondayColor,
-			display: "inline-block",
+			top: ((selected) ? -(fontSize*2) : -((fontSize/2)))+"px",
+			left: (selected) ? 0 : "2%",
+			color: (selected) ? primaryColor : secondayColor,
 			padding: 0,
-			margin: "0px",
-			opacity: 1,
+			margin: 0,
 			backgroundColor: "transparent",
-			cursor: (hasValue) ? "default" : "text"
+			cursor: (selected) ? "default" : "text",
+			WebkitTransition: ".333s ease top, .333s ease left, .333s ease font-size, .333s ease color",
+			transition: ".333s ease top, .333s ease left, .333s ease font-size, .333s ease color",
+			backgroundColor:(debug)?"#FAFAFA":"transparent"
 		}
 		// Initial <textbox/> style
 		const textboxStyle = {
+			...labelStyle,
 			height: "16em",
 			resize: "none"
 		}
 
 		return (
-			<div className="float-input">
+			<div id="float-input" style={containerStyle}>
+				<input name={name} type={type} placeholder="" value={(value.length>0)?value:""} onFocus={this.didSelectInput.bind(this)} onBlur={this.didDeselectInput.bind(this)} onChange={this.didChangeInput.bind(this)} style={inputStyle}/>
 				<label forhtml={name} style={labelStyle} onClick={this.didSelectInput.bind(this)}>{placeholder}</label>
-				<input name={name} type="text" placeholder="" value={(value.length>0)?value:""} onFocus={this.didSelectInput.bind(this)} onBlur={this.didDeselectInput.bind(this)} onChange={this.didChangeInput.bind(this)} style={inputStyle}/>
 			</div>
 		)
 	}

@@ -1,4 +1,0 @@
-.float-input label {
-	-webkit-transition: .333s ease top, .333s ease left, .333s ease opacity, .333s ease font-size, .333s ease color;
-	transition: .333s ease top, .333s ease left, .333s ease opacity, .333s ease font-size, .333s ease color;
-}
