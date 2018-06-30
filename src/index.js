@@ -1,10 +1,11 @@
 import React from 'react';
 import { string, number, func, bool } from 'prop-types';
+
 /**
  * Form input with dynamic floating label.
  *
  * @brief Creates and manages a form input element with a dynamic floating label.
- * @version 1.0.0
+ * @version 0.1.0
  * @author [Mitch Pierias](https://github.com/mitchpierias)
  */
 export default class FlowInput extends React.Component {
@@ -28,8 +29,6 @@ export default class FlowInput extends React.Component {
 		fontSize:number,
 		/** Label shrink amount. */
 		shrinkAmount:number,
-		/** Input padding. */
-		padding:number,
 		/** Value change event handler. */
 		onChange:func,
 		/** Editing end event handler. */
@@ -48,7 +47,6 @@ export default class FlowInput extends React.Component {
 		secondayColor:"rgba(0,0,0,0.25)",
 		fontSize:16,
 		shrinkAmount:0.6,
-		padding:0.6160335,
 		bordered:true,
 		debug:false
 	}
@@ -142,10 +140,10 @@ export default class FlowInput extends React.Component {
 		const inputStyle = {
 			color:(debug)?"#FFFFFF":color,
 			width: "96%",
-			padding: "0px 2%",
+			padding: (labelFontSize/2)+"px 2% 0px 2%",
 			margin: 0,
 			fontSize: fontSize+"px",
-			lineHeight: fontSize+labelFontSize+"px",
+			lineHeight: fontSize+(labelFontSize/2)+"px",
 		    borderRadius: "none",
 		    outline: "none",
 		    border:"none",
@@ -159,7 +157,7 @@ export default class FlowInput extends React.Component {
 		const labelStyle = {
 			fontSize: ((selected) ? labelFontSize : fontSize)+"px",
 			position: "relative",
-			top: ((selected) ? -(fontSize*2) : -((fontSize/2)))+"px",
+			top: ((selected) ? -(fontSize*2) : -(fontSize-(labelFontSize/2)))+"px",
 			left: (selected) ? 0 : "2%",
 			color: (selected) ? primaryColor : secondayColor,
 			padding: 0,
@@ -172,7 +170,7 @@ export default class FlowInput extends React.Component {
 		}
 		// Initial <textbox/> style
 		const textboxStyle = {
-			...labelStyle,
+			// ...labelStyle,
 			height: "16em",
 			resize: "none"
 		}

@@ -1,0 +1,74 @@
+{
+	"name": "react-flow-components",
+	"version": "0.1.2",
+	"description": "HTML flow layout components for React",
+	"author": {
+		"name": "Mitch Pierias",
+		"email": "mitchpierias@gmail.com"
+	},
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/MitchPierias/React-Flow-Components.git"
+	},
+	"main": "lib/index.js",
+	"unpkg": "lib/index.min.js",
+	"files": [
+		"lib"
+	],
+	"directories": {},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "webpack-dev-server --mode development --progress --colors",
+		"transpile": "babel src -d lib --copy-files",
+		"build": "webpack --mode production",
+		"deploy": "npm publish",
+		"publish": "npm run transpile && npm run build && npm run deploy"
+	},
+	"keywords": [
+		"react",
+		"flow",
+		"component",
+		"html",
+		"element",
+		"input",
+		"textarea"
+	],
+	"bugs": {
+		"url": "https://github.com/MitchPierias/React-Flow-Components/issues"
+	},
+	"homepage": "https://github.com/MitchPierias/React-Flow-Components#readme",
+	"dependencies": {
+		"react": "^16.0.0",
+		"react-dom": "^16.4.1",
+		"prop-types": "^15.6.2"
+	},
+	"peerDependencies": {
+		"react": "^16.0.0",
+		"react-dom": "^16.4.1",
+		"prop-types": "^15.6.2"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.24.1",
+		"babel-core": "^6.26.3",
+		"babel-loader": "^7.1.4",
+		"babel-plugin-transform-class-properties": "^6.24.1",
+		"babel-plugin-transform-object-rest-spread": "^6.23.0",
+		"babel-plugin-transform-react-jsx": "^6.24.1",
+		"babel-preset-env": "^1.7.0",
+		"babel-preset-react": "^6.24.1",
+		"babel-preset-stage-0": "^6.24.1",
+		"css-loader": "^0.28.11",
+		"html-webpack-plugin": "^3.2.0",
+		"path": "^0.12.7",
+		"react": "^15.6.2",
+		"react-dom": "^16.4.1",
+		"style-loader": "^0.21.0",
+		"webpack": "^4.14.0",
+		"webpack-cli": "^3.0.8",
+		"webpack-dev-server": "^3.1.4"
+	},
+	"engines": {
+		"node": ">=7.8.0"
+	}
+}
