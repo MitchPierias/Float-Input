@@ -11,27 +11,30 @@ npm install react-flow-components
 ```
 
 ## Usage
-### Import
 
 > Via React with Javascript ES6
 
-Import the `FlowInput` from the `react-flow-components` module.
+Import the `FlowInput` from the `react-flow-components` module as such;
 
 ```
 import FlowInput from 'react-flow-components';
 ```
 
-### Implement
-From within your component `render` function;
+Then implement within your component's `render` function like so;
 
 ```
 render() {
-	return (
-		... Open Component Layout ...
-			<FlowInput/>
-		... Close Component Layout ...
-	)
+  return (
+    ... Open Component Layout ...
+      <FlowInput/>
+    ... Close Component Layout ...
+  )
 }
 ```
 
 ## Options
+| Property |       Type       |      Description     |
+| -------- | :--------------: | -------------------- |
+| name	   | `string`  		  | Input/Component name |
+| value	   | `string|number`  | Initial input value  |
+| type	   | `string`         | Input value type     |
