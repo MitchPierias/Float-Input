@@ -1,16 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // Components
-import FlowInput from '../../src';
+import { FlowInput } from '../../src/index';
+// CSS
+import './index.css';
 
-class App extends React.Component {
-	render() {
-		return (
-			<div>
-				<h1>Flow Input Example</h1>
-			</div>
-		)
-	}
-}
+const App = (
+	<div style={{width:"100vw",height:"100vh"}}>
+		<h1>Flow Input Example</h1>
+		<FlowInput label="Given Name" type="text"/>
+	</div>
+)
 
-ReactDOM.render(<App/>, document.getElementById("root"));
+/*
+<FlowInput label="Surname" type="text"/>
+<FlowInput label="Email" type="email"/>
+*/
+
+ReactDOM.render(App, document.getElementById("root"));
